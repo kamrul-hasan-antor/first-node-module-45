@@ -12,21 +12,85 @@
 </head>
 
 <body>
-    <h1>My Node and MongoDB</h1>
+    <h1>My Node and Mongo DB</h1>
     <p id="userName"></p>
     <p id="food"></p>
+    <p id="name"></p>
+
+    <div class="container">
+        <div class="col">
+            <input type="text" class="form-control" id="user">
+            <button class="btn btn-primary" id="addBtn">
+                Add User
+            </button>
+        </div>
+    </div>
+
+    <!-- I'm trying to post -->
+    <div class="container">
+        <div class="col" style="margin-top: 30px;">
+            <p id="newFriend"></p>
+            <input id="friends" type="text" class="form-control">
+            <button id="addFriend" class="btn btn-primary mt-3">Add Friends</button>
+        </div>
+    </div>
     <script>
-        fetch("http://localhost:5000/colors/5")
+        /////// GET from server
+        fetch("http://localhost:5000/colors/2")
             .then(res => res.json())
             .then(data => {
                 document.getElementById('userName').innerText = data.colorName;
             });
 
-        fetch("http://localhost:5000/food/2")
+        fetch("http://localhost:5000/food/1")
             .then(res => res.json())
             .then(data => {
                 document.getElementById("food").innerText = data.foodName;
             })
+
+        /////// POST data to server
+        const addUserBtn = document.getElementById("addBtn");
+        addUserBtn.addEventListener("click", () => {
+            const name = document.getElementById("user").value;
+            const user = { name };
+
+            //POST
+            fetch("http://localhost:5000/addUser", {
+                method: "POST",
+                body: JSON.stringify(user),
+                headers: {
+                    'Content-type': 'application/json; charset=UTF-8',
+                }
+            })
+                .then(res => res.json())
+                .then(data => updateUser(data))
+
+        })
+        function updateUser(user) {
+            document.getElementById("name").innerText = user.name
+        }
+
+
+        // I'm trying to POST data to the server
+        const friendAddBtn = document.getElementById("addFriend");
+        friendAddBtn.addEventListener("click", () => {
+            const friendName = document.getElementById("friends").value;
+            const friends = { friendName }
+
+            /// Post
+            fetch("http://localhost:5000/addFriends", {
+                method: "POST",
+                body: JSON.stringify(friends),
+                headers: {
+                    "Content-type": "application/json; charset=UTF-8",
+                }
+            })
+                .then(res => res.json())
+                .then(data => updateFriend(data))
+        })
+        function updateFriend(friend) {
+            document.getElementById("newFriend").innerText = friend.friendName
+        }
     </script>
 </body>
 
